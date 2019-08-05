@@ -19,7 +19,7 @@ class Usuarios {
         // la funcion filter es una funcion para arreglos lo que hace es que se hace una accion escrita a cada uno de los elementos del arrelgo
         // y lo devuelve en forma de un objeto, se le pone [0] por que lo que estamos haciendo es comparamos el id, con el arreglo de id
         // y como sabemos que el id es unico por eso le ponemos el [0], para que solo devuelva uno solo
-        let persona = this.persona.filer(persona => {
+        let persona = this.personas.filter(persona => {
             return persona.id === id;
         })[0];
 
@@ -40,7 +40,7 @@ class Usuarios {
     borrarPersona(id) {
         // aqui guardamos la info de la persona que sera borrada para poder indicar cual fue la persona que se borro
         let personaBorrada = this.getPersona(id);
-        this.personas = this.personas.filer(persona => {
+        this.personas = this.personas.filter(persona => {
             return persona.id != id;
         });
         return personaBorrada;
