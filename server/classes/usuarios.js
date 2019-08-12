@@ -5,10 +5,11 @@ class Usuarios {
     }
 
     // agremas una nueva persona al arreglo de persona
-    agregarPersona(id, nombre) {
+    agregarPersona(id, nombre, sala) {
         let persona = {
             id,
-            nombre
+            nombre,
+            sala
         }
         this.personas.push(persona);
         return this.personas;
@@ -32,7 +33,8 @@ class Usuarios {
     }
 
     getPersonasPorSala(sala) {
-        //
+        let personasEnSalas = this.personas.filter(persona => persona.sala === sala);
+        return personasEnSalas;
     }
 
     // Para poder borrar una persona lo que hacemos es que lo comparamos el id que recibimos con los id del arreglo, 

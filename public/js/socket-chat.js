@@ -5,14 +5,16 @@ var params = new URLSearchParams(window.location.search);
 
 // estamos diciendo que se si la variabel params tiene el objeto nombre si no lo tiene  lo redireccionara a la pagina de index.hmtl
 // si lo tiene seguira corrriendo el programa normalmente
-if (!params.has('nombre')) {
+if (!params.has('nombre') || !params.has('sala')) {
     window.location = 'index.html';
     throw new Error('EL nombre es necesario');
 }
 
 var nombre = params.get('nombre')
+// aqui estamos recibiendo el nombre y sala, lo recibimos del frontend
 var usuario = {
-    nombre
+    nombre,
+    sala: params.get('sala')
 }
 
 
@@ -24,6 +26,7 @@ socket.on('connect', function () {
     // y un callback que por parte del servidor devolera los usuarios conectados por que se estarab guardando en un array
     socket.emit('entrarChat', usuario, function (resp) {
         console.log('Usuario Conectados', resp)
+        renderizarUsuarios(resp);
     });
 
 
@@ -37,9 +40,9 @@ socket.on('disconnect', function () {
 });
 
 
+// Desde esta parte se esta enviando el msj
 // Enviar información
 // socket.emit('enviarMensaje', {
-//     usuario: 'Fernando',
 //     mensaje: 'Hola Mundo'
 // }, function (resp) {
 //     console.log('respuesta server: ', resp);
@@ -54,5 +57,12 @@ socket.on('crearMensaje', function (mensaje) {
 
 // Escuchar cuando un usuario entra o sale del chat
 socket.on('listaPersona', function (personas) {
-    console.log(personas);
+    renderizarUsuarios(personas);
+});
+
+
+// Mensaje privados
+// el cliente escuchando cuando el envien un msj privado para luego escribirlo en consola
+socket.on('mensajePrivado', function (mensaje) {
+    console.log('Mensaje privado: ', mensaje);
 });
