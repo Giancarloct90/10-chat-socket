@@ -45,12 +45,14 @@ io.on('connection', (client) => {
 
     // El usuario que esta conectado a el servidor envia el mensaje y es en este punto donde el servidor esta en modo de escucha y lee el mensaje.
     // una vez que el mensaje llega al servidor, el servidor lo reenvia todos los usuarios conectados.
-    client.on('crearMensaje', (data) => {
+    client.on('crearMensaje', (data, fnCallback) => {
         // con el client.id obtenemos el id de la personas que esta enviando el mensaje para asi poder obtener su nombre
         // el mensaje que se envia contiene 3 cosas, 1 el nombre de la persona que esta enviando el msj, 2 el mensaje, la fecha se saca del metodo que se llama crearMensaje
         let persona = usuarios.getPersona(client.id);
         let mensaje = crearMensaje(persona.nombre, data.mensaje);
-        client.broadcast.to(persona.data).emit('crearMensaje', mensaje);
+        // con el client.broadcast.to('xxx') aqui lo que va es el id de la sala o el id de un usuario para poder enviar un msj privado
+        client.broadcast.to(persona.sala).emit('crearMensaje', mensaje);
+        fnCallback(mensaje);
     });
 
     // Cuando se desconecta alguien, se dispara este evento
@@ -72,7 +74,8 @@ io.on('connection', (client) => {
     client.on('mensajePrivado', data => {
         // con esta sentencia obtenemos toda la informacion de la persona segun su id
         let persona = usuarios.getPersona(client.id);
-        // el servidor recibe el mensaje de la persona y se lo envia a la otra persona con el comando broadcast.to es de esta manera como 
+        // el servidor recibe el mensaje de la persona y se lo envia a la otra persona con el comando broadcast.to 
+        // es de esta manera como se envia msj de manera priva en la parte de data.para va el id de la persona que se quiere enviar 
         client.broadcast.to(data.para).emit('mensajePrivado', crearMensaje(persona.nombre, data.mensaje));
     });
 });
